@@ -6,9 +6,10 @@ public class PlayerMovement : MonoBehaviour
 {
 	private CharacterController characterController;
 	private Animator animator;
+	public float x,y;
 
 	[SerializeField]
-	private float moveSpeed = 100;
+	private float moveSpeed = 100f;
 	[SerializeField]
 	private float turnSpeed = 5f;
 
@@ -35,5 +36,10 @@ public class PlayerMovement : MonoBehaviour
 
 			transform.rotation = Quaternion.Slerp(transform.rotation, newDirection, Time.deltaTime * turnSpeed);
 		}
+
+
+
+
+
 	}
 }
