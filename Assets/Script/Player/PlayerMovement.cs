@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-	private CharacterController characterController;
+	private CharacterController jugador;
 	private Animator animator;
+	private Rigidbody rb;
 
 	[SerializeField]
 	private float crouchSpeed = 50f;
@@ -15,10 +17,11 @@ public class PlayerMovement : MonoBehaviour
 	private int movementType;
 	[SerializeField]
 	private float turnSpeed = 100f;
+	private Transform camara;
 
-	private void Awake()
-	{
-		characterController = GetComponent<CharacterController>();
+	private void Start() {
+		rb = GetComponent<Rigidbody>();
+		jugador = GetComponent<CharacterController>();
 		animator = GetComponentInChildren<Animator>();
 	}
 
@@ -26,26 +29,28 @@ public class PlayerMovement : MonoBehaviour
 	{
 		var horizontal = Input.GetAxis("Horizontal");
 		var vertical = Input.GetAxis("Vertical");
-		var movement = new Vector3(horizontal, 0, vertical);
+		var movJugador = new Vector3(horizontal , 0, vertical);
 
 
+		if (Input.GetKey(KeyCode.LeftShift)) {
+			jugador.SimpleMove(movJugador * Time.deltaTime * runSpeed); movementType = 3;
+		}
+		else if (Input.GetKey(KeyCode.LeftControl)) { 
+			jugador.SimpleMove(movJugador * Time.deltaTime * crouchSpeed); movementType = 2; 
+		}
+		else { 
+			jugador.SimpleMove(movJugador * Time.deltaTime * moveSpeed); movementType = 1; 
+		}
 
-		if (Input.GetKey(KeyCode.LeftShift)) { characterController.SimpleMove(movement * Time.deltaTime * runSpeed); movementType = 3; }
-		else if (Input.GetKey(KeyCode.LeftControl)) { characterController.SimpleMove(movement * Time.deltaTime * crouchSpeed); movementType = 2; }
-		else { characterController.SimpleMove(movement * Time.deltaTime * moveSpeed); movementType = 1; }
-
-		animator.SetFloat("Speed", movement.magnitude);
+		animator.SetFloat("Speed", movJugador.magnitude);
 		animator.SetInteger("Type", movementType);
 
-		if (movement.magnitude > 0)
+		if (movJugador.magnitude > 0)
 		{
-			Quaternion newDirection = Quaternion.LookRotation(movement);
+			Quaternion newDirection = Quaternion.LookRotation(movJugador);
 			transform.rotation = Quaternion.Slerp(transform.rotation, newDirection, Time.deltaTime * turnSpeed);
 		}
 
-
-
-
-
 	}
+
 }
