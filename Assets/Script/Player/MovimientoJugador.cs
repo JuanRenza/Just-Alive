@@ -9,7 +9,7 @@ public class MovimientoJugador : MonoBehaviour
 	private CharacterController jugador;
 	private Animator animator;
 	private Rigidbody rb;
-
+	
 	[SerializeField]
 	public float moveSpeed;
 	private int movementType;
@@ -31,29 +31,38 @@ public class MovimientoJugador : MonoBehaviour
 
 
 		if (Input.GetKey(KeyCode.LeftShift)) {
+			
 			movementType = 3;
 			moveSpeed = 200f;
+			
 		}
-		else if (Input.GetKey(KeyCode.LeftControl)) { 
+		else if (Input.GetKey(KeyCode.LeftControl)) {
+			
 			movementType = 2;
 			moveSpeed = 50f;
+			
 		}
 		else {
+			
 			movementType = 1;
 			moveSpeed = 100f;
+			
 		}
 
 		jugador.SimpleMove(movJugador * Time.deltaTime * moveSpeed);
-
+		
 		animator.SetFloat("Speed", movJugador.magnitude);
 		animator.SetInteger("Type", movementType);
-
+		
 		if (movJugador.magnitude > 0)
 		{
+			
 			Quaternion newDirection = Quaternion.LookRotation(movJugador);
 			transform.rotation = Quaternion.Slerp(transform.rotation, newDirection, Time.deltaTime * turnSpeed);
+			
 		}
 
+		
 	}
 
 }
