@@ -20,20 +20,12 @@ public class IAEnemiga : MonoBehaviour
     {
         if(Vector3.Distance(Target.transform.position, transform.position) < distance)
         {
-
             agent.SetDestination(Target.transform.position);
-            agent.speed = 5;
-
+            agent.speed = 2;
         }
         else
         {
             agent.speed = 0;
-
         }
-
-
-
-
-        
     }
 }

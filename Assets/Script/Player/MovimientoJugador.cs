@@ -31,7 +31,7 @@ public class MovimientoJugador : MonoBehaviour
 
 		//Animacion para morir
 		if (movementType==4){animator.Play("Muerte");}
-
+		jugador.SimpleMove(movJugador * Time.deltaTime * moveSpeed);
 		//Movimiento al correr
 		if (Input.GetKey(KeyCode.LeftShift)) {
 			movementType = 3;
@@ -43,12 +43,10 @@ public class MovimientoJugador : MonoBehaviour
 			moveSpeed = 50f;
 		}
 		//Movimiento al caminar
-		else {
+		else if (horizontal != 0 || vertical != 0){
 			movementType = 1;
 			moveSpeed = 100f;
 		}
-
-		jugador.SimpleMove(movJugador * Time.deltaTime * moveSpeed);
 
 		animator.SetFloat("Speed", movJugador.magnitude);
 		animator.SetInteger("Type", movementType);
@@ -58,7 +56,10 @@ public class MovimientoJugador : MonoBehaviour
 			Quaternion newDirection = Quaternion.LookRotation(movJugador);
 			transform.rotation = Quaternion.Slerp(transform.rotation, newDirection, Time.deltaTime * turnSpeed);
 		}
-
+		movementType = 0;
 	}
 
+    void Paso(){
+        FindObjectOfType<AudioManager>().Play("Paso");
+    }
 }

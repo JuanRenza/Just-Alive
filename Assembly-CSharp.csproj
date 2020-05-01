@@ -58,6 +58,8 @@
      <Compile Include="Assets\Script\Camara\Camara.cs" />
      <Compile Include="Assets\Script\Enemigo\Daño.cs" />
      <Compile Include="Assets\Script\Enemigo\IAEnemiga.cs" />
+     <Compile Include="Assets\Script\Entorno\AudioManager.cs" />
+     <Compile Include="Assets\Script\Entorno\Sound.cs" />
      <Compile Include="Assets\Script\Player\MovimientoJugador.cs" />
      <Compile Include="Assets\Script\Player\VidaDaño.cs" />
      <None Include="Assets\PolygonApocalypse\Materials\Misc\Shader\POLYGON_Zombies.shader" />
