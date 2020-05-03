@@ -35,17 +35,17 @@ public class MovimientoJugador : MonoBehaviour
 		//Movimiento al correr
 		if (Input.GetKey(KeyCode.LeftShift)) {
 			movementType = 3;
-			moveSpeed = 200f;
+			moveSpeed = 120f;
 		}
 		//Movimiento al agacharse
 		else if (Input.GetKey(KeyCode.LeftControl)) { 
 			movementType = 2;
-			moveSpeed = 50f;
+			moveSpeed = 40f;
 		}
 		//Movimiento al caminar
 		else if (horizontal != 0 || vertical != 0){
 			movementType = 1;
-			moveSpeed = 100f;
+			moveSpeed = 50f;
 		}
 
 		animator.SetFloat("Speed", movJugador.magnitude);
