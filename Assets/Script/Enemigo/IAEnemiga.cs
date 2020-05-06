@@ -5,27 +5,72 @@ using UnityEngine.AI;
 
 public class IAEnemiga : MonoBehaviour
 {
-    [SerializeField]
-    public GameObject Target;
-    [SerializeField]
-    public NavMeshAgent agent;
-    [SerializeField]
-    public float distance;
+    public GameObject player;
+    NavMeshAgent agent;
+    float dist;
+    public float distanciaPerseguir = 200;
+    private bool perseguir = false;
+    private Animator anim;
+    VidaDaño vidaPlayer;
 
+    private void Awake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        anim = GetComponent<Animator>();
+        vidaPlayer = player.GetComponent(typeof(VidaDaño)) as VidaDaño;
 
-   
+     
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if(Vector3.Distance(Target.transform.position, transform.position) < distance)
+        dist = Vector3.Distance(player.transform.position, transform.position);
+
+        if(dist <= distanciaPerseguir)
         {
-            agent.SetDestination(Target.transform.position);
-            agent.speed = 2;
+            perseguir = true;
+
+        }
+        if(perseguir == true)
+        {
+            agent.SetDestination(player.transform.position);
+        }
+
+        if(Vector3.Distance(player.transform.position, transform.position) > 1 && vidaPlayer.vida > 0)
+        {
+            anim.SetFloat("VelX", 0);
+            anim.SetFloat("VelY", 1);
         }
         else
         {
-            agent.speed = 0;
+            if (Vector3.Distance(player.transform.position, transform.position) > 1 && vidaPlayer.vida == 0)
+            {
+                anim.SetFloat("VelX", 0);
+                anim.SetFloat("VelY", 0);
+                
+            }
         }
+              
+                if(Vector3.Distance(player.transform.position, transform.position) <= 1 && vidaPlayer.vida > 0)
+                {
+                    anim.SetFloat("VelX", 1);
+                    anim.SetFloat("Vely", 0);
+                }
+        else
+        {
+            if (Vector3.Distance(player.transform.position, transform.position) <= 1 && vidaPlayer.vida == 0)
+            {
+                anim.SetFloat("VelX", 0);
+                anim.SetFloat("VelY", 0.5f);
+            }
+        }
+                
+                
+                   
+                
+            
+            
+        
     }
 }
