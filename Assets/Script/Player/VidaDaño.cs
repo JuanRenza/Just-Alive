@@ -26,7 +26,6 @@ public class VidaDaño : MonoBehaviour
 		{
 			vida -= cantidad;
 			StartCoroutine(Invulnerabilidad());
-			StartCoroutine(FrenarVelocidad());
 
 			if (vida <= 0){GetComponent<MovimientoJugador>().movementType = 4;}
 
@@ -39,13 +38,5 @@ public class VidaDaño : MonoBehaviour
 		invencible = true;
 		yield return new WaitForSeconds(tiempo_invencible);
 		invencible = false;
-	}
-
-		IEnumerator FrenarVelocidad()
-	{
-		var velocidadactual = GetComponent<MovimientoJugador>().moveSpeed;
-		GetComponent<MovimientoJugador>().moveSpeed = 0;
-		yield return new WaitForSeconds(tiempo_frenado);
-		GetComponent<MovimientoJugador>().moveSpeed = velocidadactual;
 	}
 }

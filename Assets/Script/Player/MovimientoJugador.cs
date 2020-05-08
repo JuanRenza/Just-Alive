@@ -1,12 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-// This script moves the character controller forward
-// and sideways based on the arrow keys.
-// It also jumps when pressing space.
-// Make sure to attach a character controller to the same game object.
-// It is recommended that you make only one call to Move or SimpleMove per frame.
-
 public class MovimientoJugador : MonoBehaviour
 {
     CharacterController jugador;
@@ -14,15 +8,20 @@ public class MovimientoJugador : MonoBehaviour
 	private Rigidbody rb;
 	private Camera mainCamera;
 
-    public float speed;
-    public float jumpSpeed = 8.0f;
-    public float gravity = 20.0f;
-	public int movementType;
-	public float moveSpeed;
 	[SerializeField]
-	public float sensibilidadCamara = 1.0f;
+    public float speed = 6.0f;
+	[SerializeField]
+    public float alturaSalto = 8.0f;
+	[SerializeField]
+    public float gravity = 20.0f;
+	private Vector3 direccion;
 
-    private Vector3 moveDirection = Vector3.zero;
+
+	public int movementType;
+	[SerializeField]
+	public float sensibilidadCamara = 1.5f;
+
+    
 
     void Start()
     {
@@ -51,45 +50,47 @@ public class MovimientoJugador : MonoBehaviour
 		
 		//Animacion para morir
 		if (movementType==4){animator.Play("Muerte");}
+		movementType = 0;
+
+		//Movimiento al caminar
+		if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0) {
+			movementType = 1;
+			speed = 3.0f;
+		}
+		//Movimiento al agacharse
+		if (Input.GetKey(KeyCode.LeftControl)) { 
+			movementType = 2;
+			speed = 2.5f;
+		}
 		//Movimiento al correr
 		if (Input.GetKey(KeyCode.LeftShift)) {
 			movementType = 3;
 			speed = 7.0f;
 		}
-		//Movimiento al agacharse
-		else if (Input.GetKey(KeyCode.LeftControl)) { 
-			movementType = 2;
-			speed = 2.5f;
-		}
-		//Movimiento al caminar
-		else {
-			movementType = 1;
-			speed = 3.0f;
-		}
 
-        if (jugador.isGrounded)
+		if (jugador.isGrounded)
         {
-            // We are grounded, so recalculate
-            // move direction directly from axes
 
-            moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
-            moveDirection *= speed;
+			float Horizontal = Input.GetAxis("Horizontal");
+			float Vertical = Input.GetAxis("Vertical");
+            direccion = new Vector3(Horizontal, 0.0f, Vertical);
+			direccion.Normalize();
+            direccion *= speed;
+
+			//Posicionar la direcion del movimiento a la del juego
+			direccion = transform.TransformDirection(direccion);
 
             if (Input.GetButton("Jump"))
             {
-                moveDirection.y = jumpSpeed;
+                direccion.y = alturaSalto;
             }
         }
-		
-		animator.SetFloat("Speed", moveDirection.magnitude);
+
+        direccion.y -= gravity * Time.deltaTime;
+        jugador.Move(direccion * Time.deltaTime);
+
+		animator.SetFloat("Speed", direccion.magnitude);
 		animator.SetInteger("Type", movementType);
-
-        moveDirection.y -= gravity * Time.deltaTime;
-
-		//Posicionar la direcion del movimiento a la del juego
-		moveDirection = transform.TransformDirection(moveDirection);
-        jugador.Move(moveDirection * Time.deltaTime);
-		movementType = 0;
 	}
 
 	void movimientoCamara(){
@@ -104,6 +105,7 @@ public class MovimientoJugador : MonoBehaviour
 
 		//Mirar arriba y abajo
 		Vector3 rotacionX = mainCamera.gameObject.transform.localEulerAngles;
+		//rotacionX.x = Mathf.Clamp(rotacionX.x,-90f,90f);
 		rotacionX.x -= mouseY * sensibilidadCamara;
 		mainCamera.gameObject.transform.localRotation = Quaternion.AngleAxis(rotacionX.x,Vector3.right);
 
